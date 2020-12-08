@@ -90,7 +90,8 @@
             },
             deleteUser(deletedUser) {
                 console.log(deletedUser)
-                this.users.splice(deletedUser, 1)
+                const confirmation = confirm('Вы действительно хотите удалить этого пользователя?')
+                confirmation === true ? this.users.splice(deletedUser, 1) : undefined
             }
         }
     }

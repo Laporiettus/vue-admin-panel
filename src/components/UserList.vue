@@ -1,71 +1,32 @@
 <template>
     <div>
-        <header-menu
-                :toggleNewUser="toggleNewUser"
-                @on-toggle-new-user="openNewUser($event)"
-                @on-toggle-filter-data="openFilter($event)"
-                style="margin-bottom: 40px"
-        />
         <users
                 :users="users"
                 @on-info-edit="editUser($event)"
                 @on-delete-user="deleteUser($event)"
-        />
-        <filter-component
-                :users="users"
-                v-if="toggleFilter"
-                @on-apply-filter="filterData($event)"
-                @on-clear-filter="clearFilter($event)"
-        />
+        ></users>
         <new-user
                 v-if="toggleNewUser"
                 @on-new-user="createUser($event)"
         />
-        <edit-user
-                v-if="isEditing"
-                :sendingData="sendingData"
-                @on-confirm-change="confirmChange($event)"
-        />
+        <div class="w-100 flex justify-content-center ma-top-40">
+            <v-btn
+                    elevation="2"
+                    outlined
+                    @click="toggleNewUser = !toggleNewUser"
+            >Создать нового пользователя</v-btn>
+        </div>
     </div>
 </template>
 
 <script>
     import Users from "./Users";
     import NewUser from "./NewUser";
-    import FilterComponent from "./FilterComponent";
-    import HeaderMenu from "./headerMenu";
-    import EditUser from "./EditUser";
-
     export default {
         name: "UserList",
         components: {
-            HeaderMenu,
-            FilterComponent,
             Users,
-            NewUser,
-            EditUser
-        },
-        props: {
-            fullName: {
-                type: String
-            },
-            userStatus: {
-                type: String
-            },
-            email: {
-                type: String,
-                reg: /.+@.+\..+/
-            },
-            telephone: {
-                type: Number,
-                maxlength: 10
-            },
-            creationDate: {
-                type: Date || String
-            },
-            lastChangedAt: {
-                type: Date || String
-            },
+            NewUser
         },
         data() {
             return {
@@ -76,8 +37,8 @@
                         password: '123',
                         userStatus: 'admin',
                         telephone: 89991231211,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 3, 15, 14, 30),
+                        lastChangeDate: Date.now() - 18400,
                     },
                     {
                         fullName: 'Борисов Борис Борисович',
@@ -85,8 +46,8 @@
                         password: '123',
                         userStatus: 'user',
                         telephone: 89497471515,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2019, 3, 15, 11, 30),
+                        lastChangeDate: Date.now() - 65000,
                     },
                     {
                         fullName: 'Васильева Василиса Васильевна',
@@ -94,8 +55,8 @@
                         password: '123',
                         userStatus: 'client',
                         telephone: 89211112233,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 11, 21, 10, 12),
+                        lastChangeDate: Date.now() - 128000,
                     },
                     {
                         fullName: 'Геннадьев Геннадий Геннадьевич',
@@ -103,50 +64,14 @@
                         password: '123',
                         userStatus: 'user',
                         telephone: 89772956710,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2019, 5, 3, 22, 5),
+                        lastChangeDate: Date.now() - 184,
                     }
                 ],
-                toggleNewUser: false,
-                toggleFilter: false,
-                isEditing: false,
-                userStorage: [],
-                savedUsers: [],
-                sendingData: {}
+                toggleNewUser: false
             }
-        },
-        created() {
-            // Фильтр дат
-            this.users.forEach(user => user.creationDate = user.creationDate.toLocaleString())
-            this.users.forEach(user => user.lastChangeDate = user.lastChangeDate.toLocaleString())
-            // Создаём localStorage
-            const parsed = JSON.stringify(this.users)
-            if (localStorage.getItem('users') == null) {
-                localStorage.setItem('storedUsers', parsed)
-                localStorage.setItem('users', parsed)
-            }
-            // Сохраняем массив в старом виде
-            this.savedArr = this.users
-        },
-        mounted() {
-            // Если localStorage не пустой, в массив users заносятся данные из него
-            if (localStorage.getItem('users')) {
-                try {
-                    this.users = JSON.parse(localStorage.getItem('users'));
-                } catch (e) {
-                    localStorage.removeItem('users');
-                }
-            }
-            this.saveUsers()
-        },
-        beforeUpdate() {
-            // Фильтр дат при обновлении массива
-            this.users.forEach(user => user.creationDate = user.creationDate.toLocaleString())
-            this.users.forEach(user => user.lastChangeDate = user.lastChangeDate.toLocaleString())
-            this.saveUsers()
         },
         methods: {
-            // Создание пользователя. Принимает эмит из компонента NewUser
             createUser(user) {
                 this.users.push({
                     fullName: user.name,
@@ -154,59 +79,19 @@
                     password: user.password,
                     userStatus: user.status,
                     telephone: user.telephone,
-                    creationDate: user.createdAt,
-                    lastChangeDate: user.lastChangedAt
+                    creationDate: user.creationDate,
+                    lastChangeDate: user.lastChangeDate
                 })
             },
-            // Редактирует пользователя по выбранному полю. Принимает эмит из компонента Users
-            // Последовательность методов: editUser() из Users => editUser() в UserList =>
-            // confirmChanges() в EditUsers => confirmChange() в UserList
             editUser(user) {
-                const {newInfo, ind, id} = user
-                console.log(newInfo, ind, id)
-                this.isEditing = true
-                this.sendingData = user
+                const { newInfo, ind, id } = user
+                console.log(user)
+                this.$set(this.users[id], ind, newInfo)
             },
-            // Принимает подтверждение для редактирования. Принимает эмит из EditUsers.
-            confirmChange(info) {
-                const {id, ind, val} = info
-                this.$set(this.users[id], ind, val)
-            },
-            // Удаляет пользователя. Принимает эмит из компонента Users
             deleteUser(deletedUser) {
                 console.log(deletedUser)
                 const confirmation = confirm('Вы действительно хотите удалить этого пользователя?')
                 confirmation === true ? this.users.splice(deletedUser, 1) : undefined
-            },
-            // Фильтр по email или телефону. Эмит из компонента FilterComponent
-            filterData(info) {
-                const {key, val} = info
-                console.log(key, val)
-                if (key === 'Email' && val !== '') {
-                    this.users = this.users.filter(user => user.email.includes(val))
-                    console.log(this.users)
-                } else if (key === 'Телефон' && val !== '') {
-                    this.users = this.users.filter(user => user.telephone.toString().includes(val))
-                }
-            },
-            // Обновляет localStorage
-            saveUsers() {
-                const parsed = JSON.stringify(this.users);
-                localStorage.setItem('users', parsed);
-            },
-            // Очищает фильтр и возвращает сохранённый массив. Эмит из FilterComponent
-            clearFilter() {
-                this.users = this.savedArr
-            },
-            // Показывает компонент NewUser, закрывает FilterComponent
-            openNewUser() {
-                this.toggleNewUser = !this.toggleNewUser
-                this.toggleFilter = false
-            },
-            // Показывает компонент FilterComponent, закрывает NewUser
-            openFilter() {
-                this.toggleFilter = !this.toggleFilter
-                this.toggleNewUser = false
             }
         }
     }
@@ -216,15 +101,12 @@
     .w-100 {
         width: 100%;
     }
-
     .flex {
         display: flex;
     }
-
     .justify-content-center {
         justify-content: center;
     }
-
     .ma-top-40 {
         margin-top: 40px;
     }

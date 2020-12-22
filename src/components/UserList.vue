@@ -6,11 +6,50 @@
                 @on-toggle-filter-data="openFilter($event)"
                 style="margin-bottom: 40px"
         />
-        <users
-                :users="users"
-                @on-info-edit="editUser($event)"
-                @on-delete-user="deleteUser($event)"
-        />
+        <v-simple-table>
+            <thead>
+            <tr>
+                <th class="text-center">
+                    ФИО
+                </th>
+                <th class="text-center">
+                    Email
+                </th>
+                <th class="text-center">
+                    Пароль
+                </th>
+                <th class="text-center">
+                    Статус пользователя
+                </th>
+                <th class="text-center">
+                    Телефон
+                </th>
+                <th class="text-center">
+                    Дата создания
+                </th>
+                <th class="text-center">
+                    Дата последнего изменения
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <users
+                    v-for="(user, id) in users"
+                    :key="id"
+                    :user="user"
+                    :id="id"
+                    :full-name="user.fullName"
+                    :email="user.email"
+                    :user-status="user.userStatus"
+                    :telephone="user.telephone"
+                    :password="user.password"
+                    :creation-date="user.creationDate"
+                    :last-changed-date="user.lastChangeDate"
+                    @on-info-edit="editUser($event)"
+                    @on-delete-user="deleteUser($event)"
+                />
+            </tbody>
+        </v-simple-table>
         <filter-component
                 :users="users"
                 v-if="toggleFilter"
@@ -63,7 +102,7 @@
             creationDate: {
                 type: Date || String
             },
-            lastChangedAt: {
+            lastChangedDate: {
                 type: Date || String
             },
         },
@@ -171,6 +210,7 @@
             confirmChange(info) {
                 const {id, ind, val} = info
                 this.$set(this.users[id], ind, val)
+                this.users[id].lastChangeDate = new Date(Date.now())
             },
             // Удаляет пользователя. Принимает эмит из компонента Users
             deleteUser(deletedUser) {

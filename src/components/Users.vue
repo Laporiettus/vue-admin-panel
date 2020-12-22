@@ -1,66 +1,64 @@
 <template>
-    <div class="user-table">
-        <v-simple-table>
-            <thead>
-            <tr>
-                <th class="text-center">
-                    ФИО
-                </th>
-                <th class="text-center">
-                    Email
-                </th>
-                <th class="text-center">
-                    Пароль
-                </th>
-                <th class="text-center">
-                    Статус пользователя
-                </th>
-                <th class="text-center">
-                    Телефон
-                </th>
-                <th class="text-center">
-                    Дата создания
-                </th>
-                <th class="text-center">
-                    Дата последнего изменения
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                    v-for="(user, id) in users"
-                    :key="id"
-            >
-                <td
-                        v-for="(val, key, index) in user"
-                        :key="index"
-                        @click="editUser(val, key, id)"
-                        >
-                        {{val}}
-                </td>
-                <td
-                    @click="deleteUser(id)">
-                    Удалить пользователя
-                </td>
-            </tr>
-            </tbody>
-        </v-simple-table>
-    </div>
+    <tr class="text-center">
+        <td @click="editUser(fullName, 'fullName', id)">{{fullName}}</td>
+        <td @click="editUser(email, 'email', id)">{{email}}</td>
+        <td @click="editUser(password, 'password', id)">{{password}}</td>
+        <td @click="editUser(userStatus, 'userStatus', id)">{{userStatus}}</td>
+        <td @click="editUser(telephone, 'telephone', id)">{{telephone}}</td>
+        <td>{{creationDate}}</td>
+        <td>{{lastChangedDate}}</td>
+        <td
+                @click="deleteUser(id)">
+            Удалить пользователя
+        </td>
+    </tr>
 </template>
 
 <script>
     export default {
         name: "Users",
+        created() {
+            console.log(this.user)
+        },
         data() {
             return {
                 newInfo: '',
-                isEditing: false,
-                userStatus: [
-                    'user', 'client', 'admin'
-                ],
+                isEditing: false
             }
         },
-        props: ['users'],
+        props: {
+            users: Array,
+            fullName: {
+                type: String
+            },
+            userStatus: {
+                type: String
+            },
+            email: {
+                type: String,
+                reg: /.+@.+\..+/
+            },
+            password: {
+                type: String,
+                required: true
+            },
+            telephone: {
+                type: Number,
+                maxlength: 10
+            },
+            creationDate: {
+                type: String
+            },
+            lastChangedDate: {
+                type: String
+            },
+            user: {
+                type: Object
+            },
+            id: {
+                type: Number
+            }
+        },
         methods: {
             editUser(val, ind, id) {
                 console.log(val, ind, id)

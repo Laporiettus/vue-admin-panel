@@ -1,12 +1,10 @@
 <template>
     <tr class="text-center">
-        <td @click="editUser(fullName, 'fullName', id)">{{fullName}}</td>
-        <td @click="editUser(email, 'email', id)">{{email}}</td>
-        <td @click="editUser(password, 'password', id)">{{password}}</td>
-        <td @click="editUser(userStatus, 'userStatus', id)">{{userStatus}}</td>
-        <td @click="editUser(telephone, 'telephone', id)">{{telephone}}</td>
-        <td>{{creationDate}}</td>
-        <td>{{lastChangedDate}}</td>
+        <td
+                v-for="(val, propname) in user"
+                :key="propname"
+                @click="editUser(val, propname, userId)"
+                >{{val}}</td>
         <td
                 @click="deleteUser(id)">
             Удалить пользователя
@@ -27,7 +25,6 @@
             }
         },
         props: {
-            users: Array,
             fullName: {
                 type: String
             },
@@ -55,7 +52,7 @@
             user: {
                 type: Object
             },
-            id: {
+            userId: {
                 type: Number
             }
         },

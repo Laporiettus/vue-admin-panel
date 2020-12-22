@@ -37,7 +37,7 @@
                     v-for="(user, id) in users"
                     :key="id"
                     :user="user"
-                    :id="id"
+                    :user-id="id"
                     :full-name="user.fullName"
                     :email="user.email"
                     :user-status="user.userStatus"
@@ -115,8 +115,8 @@
                         password: '123',
                         userStatus: 'admin',
                         telephone: 89991231211,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 2, 15, 14, 14),
+                        lastChangeDate: new Date(2018, 2, 15, 14, 21)
                     },
                     {
                         fullName: 'Борисов Борис Борисович',
@@ -124,8 +124,8 @@
                         password: '123',
                         userStatus: 'user',
                         telephone: 89497471515,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 2, 15, 14, 15),
+                        lastChangeDate: new Date(2018, 2, 15, 14, 22)
                     },
                     {
                         fullName: 'Васильева Василиса Васильевна',
@@ -133,8 +133,8 @@
                         password: '123',
                         userStatus: 'client',
                         telephone: 89211112233,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 2, 15, 14, 16),
+                        lastChangeDate: new Date(2018, 2, 15, 14, 23)
                     },
                     {
                         fullName: 'Геннадьев Геннадий Геннадьевич',
@@ -142,8 +142,8 @@
                         password: '123',
                         userStatus: 'user',
                         telephone: 89772956710,
-                        creationDate: new Date(2018, 2, 15, 14, 13),
-                        lastChangeDate: new Date(2018, 2, 15, 14, 13)
+                        creationDate: new Date(2018, 2, 15, 14, 17),
+                        lastChangeDate: new Date(2018, 2, 15, 14, 24)
                     }
                 ],
                 toggleNewUser: false,

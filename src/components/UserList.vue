@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header-menu
+        <HeaderMenu
                 :toggleNewUser="toggleNewUser"
                 @on-toggle-new-user="openNewUser($event)"
                 @on-toggle-filter-data="openFilter($event)"
@@ -33,34 +33,27 @@
             </tr>
             </thead>
             <tbody>
-                <users
+                <Users
                     v-for="(user, id) in users"
                     :key="id"
+                    :id="id"
                     :user="user"
-                    :user-id="id"
-                    :full-name="user.fullName"
-                    :email="user.email"
-                    :user-status="user.userStatus"
-                    :telephone="user.telephone"
-                    :password="user.password"
-                    :creation-date="user.creationDate"
-                    :last-changed-date="user.lastChangeDate"
-                    @on-info-edit="editUser($event)"
                     @on-delete-user="deleteUser($event)"
+                    @on-user-edit-new="editUserNew($event)"
                 />
             </tbody>
         </v-simple-table>
-        <filter-component
+        <FilterComponent
                 :users="users"
                 v-if="toggleFilter"
                 @on-apply-filter="filterData($event)"
                 @on-clear-filter="clearFilter($event)"
         />
-        <new-user
+        <NewUser
                 v-if="toggleNewUser"
                 @on-new-user="createUser($event)"
         />
-        <edit-user
+        <EditUser
                 v-if="isEditing"
                 :sendingData="sendingData"
                 @on-confirm-change="confirmChange($event)"
@@ -69,10 +62,10 @@
 </template>
 
 <script>
-    import Users from "./Users";
+    import Users from "./UserItem";
     import NewUser from "./NewUser";
     import FilterComponent from "./FilterComponent";
-    import HeaderMenu from "./headerMenu";
+    import HeaderMenu from "./HeaderMenu";
     import EditUser from "./EditUser";
 
     export default {
@@ -198,30 +191,32 @@
                 })
             },
             // Редактирует пользователя по выбранному полю. Принимает эмит из компонента Users
-            // Последовательность методов: editUser() из Users => editUser() в UserList =>
-            // confirmChanges() в EditUsers => confirmChange() в UserList
-            editUser(user) {
-                const {newInfo, ind, id} = user
-                console.log(newInfo, ind, id)
+            // Последовательность методов: editUser() из UserItem => editUser() в UserList =>
+            // confirmChanges() в EditUser => confirmChange() в UserList
+            editUserNew(userInfo) {
+                const {user, id} = userInfo
+                console.log('UserInfo: ', user, id)
                 this.isEditing = true
-                this.sendingData = user
+                this.sendingData = userInfo
+                console.log('SendingData: ', this.sendingData)
             },
             // Принимает подтверждение для редактирования. Принимает эмит из EditUsers.
-            confirmChange(info) {
-                const {id, ind, val} = info
-                this.$set(this.users[id], ind, val)
-                this.users[id].lastChangeDate = new Date(Date.now())
+            confirmChange(newData) {
+                const {info, userId} = newData
+                console.log('ID: ', userId)
+                console.log('UserList newData: ', newData)
+                console.log('User: ', info)
+                this.$set(this.users, userId, info)
+                this.users[userId].lastChangeDate = new Date(Date.now())
             },
             // Удаляет пользователя. Принимает эмит из компонента Users
             deleteUser(deletedUser) {
-                console.log(deletedUser)
                 const confirmation = confirm('Вы действительно хотите удалить этого пользователя?')
                 confirmation === true ? this.users.splice(deletedUser, 1) : undefined
             },
             // Фильтр по email или телефону. Эмит из компонента FilterComponent
             filterData(info) {
                 const {key, val} = info
-                console.log(key, val)
                 if (key === 'Email' && val !== '') {
                     this.users = this.users.filter(user => user.email.includes(val))
                     console.log(this.users)

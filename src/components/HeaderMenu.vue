@@ -7,7 +7,7 @@
 
 <script>
     export default {
-        name: "headerMenu",
+        name: "HeaderMenu",
         methods: {
             createUser() {
                 this.$emit('on-toggle-new-user')

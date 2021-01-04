@@ -43,7 +43,7 @@
                 />
             </tbody>
         </v-simple-table>
-        <FilterComponent
+        <FilterUsers
                 :users="users"
                 v-if="toggleFilter"
                 @on-apply-filter="filterData($event)"
@@ -64,7 +64,7 @@
 <script>
     import UserItem from "./UserItem";
     import NewUser from "./NewUser";
-    import FilterComponent from "./FilterComponent";
+    import FilterUsers from "./FilterUsers";
     import HeaderMenu from "./HeaderMenu";
     import EditUser from "./EditUser";
 
@@ -72,32 +72,10 @@
         name: "UserList",
         components: {
             HeaderMenu,
-            FilterComponent,
+            FilterUsers,
             UserItem,
             NewUser,
             EditUser
-        },
-        props: {
-            fullName: {
-                type: String
-            },
-            userStatus: {
-                type: String
-            },
-            email: {
-                type: String,
-                reg: /.+@.+\..+/
-            },
-            telephone: {
-                type: Number,
-                maxlength: 10
-            },
-            creationDate: {
-                type: Date || String
-            },
-            lastChangedDate: {
-                type: Date || String
-            },
         },
         data() {
             return {

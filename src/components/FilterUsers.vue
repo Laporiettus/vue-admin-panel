@@ -25,7 +25,7 @@
 
 <script>
     export default {
-        name: "FilterComponent",
+        name: "FilterUsers",
         data() {
             return {
                 itemKey: '',

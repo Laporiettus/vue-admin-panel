@@ -5,10 +5,10 @@
                 :key="propname"
         >{{val}}</td>
         <td
-            @click="editUserNew(user, id)"
+                @click="editUserNew(user, id)"
         >Редактировать пользователя</td>
         <td
-            @click="deleteUser(id)"
+                @click="deleteUser(id)"
         >Удалить пользователя</td>
     </tr>
 </template>
@@ -27,7 +27,7 @@
         methods: {
             editUserNew(user, id) {
                 console.log(user, id)
-                this.$emit('on-user-edit-new', {user, id})
+                this.$emit('on-user-edit', {user, id})
             },
             deleteUser(id) {
                 this.$emit('on-delete-user', id)

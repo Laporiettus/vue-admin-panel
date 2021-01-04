@@ -3,29 +3,24 @@
         <h1 class="text-center">Редактирование пользователя ID: {{sendingData.id}}</h1>
         <v-text-field
                 label="ФИО"
-                :value="user.fullName"
-                v-model="newInfo.fullName"
+                v-model="newUserInfo.fullName"
         ></v-text-field>
         <v-text-field
                 label="Email"
-                :value="user.email"
-                v-model="newInfo.email"
+                v-model="newUserInfo.email"
         ></v-text-field>
         <v-text-field
                 label="Пароль"
-                :value="user.password"
-                v-model="newInfo.password"
+                v-model="newUserInfo.password"
         ></v-text-field>
         <v-select
                 label="Выберие статус пользователя"
                 :items="userStatus"
-                :value="user.userStatus"
-                v-model="newInfo.userStatus"
+                v-model="newUserInfo.userStatus"
         ></v-select>
         <v-text-field
                 label="Телефон"
-                :value="user.telephone"
-                v-model="newInfo.telephone"
+                v-model="newUserInfo.telephone"
         ></v-text-field>
         <v-btn @click="confirmChanges">Подтвердить изменения</v-btn>
     </v-form>
@@ -34,16 +29,13 @@
 <script>
     export default {
         name: "EditUser",
-        created() {
-            console.log(this.sendingData.fullName)
-        },
         data() {
             return {
                 userStatus: [
                     'user', 'client', 'admin'
                 ],
                 user: this.sendingData.user,
-                newInfo: {
+                newUserInfo: {
                     fullName: this.sendingData.user.fullName,
                     email: this.sendingData.user.email,
                     password: this.sendingData.user.password,
@@ -93,11 +85,11 @@
         },
         methods: {
             confirmChanges() {
-                const confirmation = confirm(`Вы действительно хотите изменить данные пользователя под номером ${this.sendingData.id}?`)
+                const confirmation = confirm(
+                    `Вы действительно хотите изменить данные пользователя под номером ${this.sendingData.id}?`
+                )
                 if (confirmation === true) {
-                    console.log('Edit user user: ', this.newInfo)
-                    console.log('ID: ', this.sendingData.id)
-                    const info = this.newInfo
+                    const info = this.newUserInfo
                     const userId = this.sendingData.id
                     this.$emit('on-confirm-change', {info, userId})
                 }

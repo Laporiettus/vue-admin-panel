@@ -33,13 +33,13 @@
             </tr>
             </thead>
             <tbody>
-                <Users
+                <UserItem
                     v-for="(user, id) in users"
                     :key="id"
                     :id="id"
                     :user="user"
                     @on-delete-user="deleteUser($event)"
-                    @on-user-edit-new="editUserNew($event)"
+                    @on-user-edit="editUser($event)"
                 />
             </tbody>
         </v-simple-table>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import Users from "./UserItem";
+    import UserItem from "./UserItem";
     import NewUser from "./NewUser";
     import FilterComponent from "./FilterComponent";
     import HeaderMenu from "./HeaderMenu";
@@ -73,7 +73,7 @@
         components: {
             HeaderMenu,
             FilterComponent,
-            Users,
+            UserItem,
             NewUser,
             EditUser
         },
@@ -193,19 +193,16 @@
             // Редактирует пользователя по выбранному полю. Принимает эмит из компонента Users
             // Последовательность методов: editUser() из UserItem => editUser() в UserList =>
             // confirmChanges() в EditUser => confirmChange() в UserList
-            editUserNew(userInfo) {
+            editUser(userInfo) {
                 const {user, id} = userInfo
-                console.log('UserInfo: ', user, id)
+                console.log('EditUser User object: ', user)
+                console.log('EditUser User Id: ', id)
                 this.isEditing = true
                 this.sendingData = userInfo
-                console.log('SendingData: ', this.sendingData)
             },
             // Принимает подтверждение для редактирования. Принимает эмит из EditUsers.
             confirmChange(newData) {
                 const {info, userId} = newData
-                console.log('ID: ', userId)
-                console.log('UserList newData: ', newData)
-                console.log('User: ', info)
                 this.$set(this.users, userId, info)
                 this.users[userId].lastChangeDate = new Date(Date.now())
             },
